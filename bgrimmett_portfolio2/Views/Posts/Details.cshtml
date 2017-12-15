@@ -1,0 +1,85 @@
+﻿@using Microsoft.AspNet.Identity;
+
+@model bgrimmett_portfolio2.Models.Post
+
+@{ 
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center">
+    <h2 style="font-weight:bold; font-size:28px; padding-top:100px;">@Model.Title</h2>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="@Model.MediaURL" class="img-responsive" />
+            </div>
+
+            <div class="col-md-6 text-center">
+                <div>
+                    <p>@Html.Raw(Model.Body.ToString())</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p>
+        @if (User.IsInRole("Admin"))
+        {
+            @Html.ActionLink("Edit", "Edit", new { slug = Model.Slug }) <span>|</span>
+            @Html.ActionLink("Delete", "Delete", new { slug = Model.Slug })
+        }
+
+        
+    </p>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <h5 style="font-weight:bold; font-size:24px;">Discussion</h5>
+        using (Html.BeginForm("CommentCreate", "Posts", FormMethod.Post, new { enctype = "Multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <input type="number" name="PostId" value="@Model.Id" hidden />
+            <div>
+                <textarea type="text" name="Body" rows="7" class="form-control" required placeholder="Add a comment..."></textarea>
+            </div>
+                <div>
+                    <input class="btn-sm btn-primary" type="submit" value="Share" />
+                </div>
+                <hr />
+        }
+    }
+
+</div>
+    @*else
+        {
+            @ViewBag.Login;
+        }*@
+<div class="text-center">
+    @foreach (var comment in Model.Comments)
+    {
+        if (comment != null)
+        {
+            @*<p>@comment.Body - by @comment.Author.FirstName on @comment.Created.ToShortDateString()</p>*@
+            <div style="font-weight:bold;" class="post-meta">@Html.DisplayFor(modelcomment => comment.Author.FirstName)</div>
+            <div style="padding:10px; color: #ff9000; " class="post-meta">@Html.DisplayFor(modelcomment => comment.Body)</div>
+                <div class="post-meta">@comment.CreationDate.ToString("d")</div>
+
+            if (User.IsInRole("Admin") || User.IsInRole("Moderator") || User.Identity.GetUserId() == comment.AuthorId) // author id and user id is going to be the same number
+            {
+                <div>
+                    @Html.ActionLink("Edit", "Edit", "Comments", new { id = comment.Id }, null) <span> | </span>
+                    @Html.ActionLink("Delete", "Delete", "Comments", new { id = comment.Id }, null) @*<span> | </span>*@
+                </div>
+
+            }
+            <hr />
+        }
+    }
+</div>
+<div class="text-center">
+    @Html.ActionLink("Back to List", "Index")
+    </div>
+

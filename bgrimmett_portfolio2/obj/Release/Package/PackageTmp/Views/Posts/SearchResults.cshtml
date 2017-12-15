@@ -1,0 +1,18 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container" style="padding-top:100px;">
+    <div class="row">
+        @foreach (var item in Model)
+            {
+            <div class="col-md-6">
+                <p class="text-uppercase">@item.Title</p>
+                <p><a href="@Url.Action("Details", new { slug = item.Slug })"><img src="@item.MediaURL" class="img-responsive" /></a></p>
+                <p>@Html.Raw(item.Body.ToString())</p>
+
+            </div>
+        }
+    </div>
+</div>

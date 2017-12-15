@@ -1,0 +1,102 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<bgrimmett_portfolio2.Models.Post>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<header id="fh5co-header" class="fh5co-cover js-fullheight" role="banner" style="background-image:url('/template/images/avi-richards-183715 Revise.jpg');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 text-center">
+                <div class="display-t js-fullheight">
+                    <div class="display-tc js-fullheight animate-box" data-animate-effect="fadeIn">
+                        <a href="@Url.Action("Index", "Home")"><div class="profile-thumb" style="background: url(/template/images/BKG7.jpg);"></div></a>
+                        <h1><span>Brandon Grimmett</span></h1>
+                        <h3><span>Collective public thoughts.</span></h3>
+                        <p>
+                            <ul class="fh5co-social-icons">
+                                <li><a href="https://www.facebook.com/mistergrimmett" target="_blank"><i class="icon-facebook3"></i></a></li>
+                                <li><a href="https://www.linkedin.com/in/brandon-grimmett/" target="_blank"><i class="icon-linkedin2"></i></a></li>
+                                <li><a href="https://www.instagram.com/mistergrimmett/" target="_blank"><i class="icon-instagram2"></i></a></li>
+                            </ul>
+
+                            <!--<ul class="fh5co-social-icons">
+                                <li><a href="#"><i class="icon-twitter2"></i></a></li>
+                                <li><a href="https://www.facebook.com/mistergrimmett" target="_blank"><i class="icon-facebook2"></i></a></li>
+                                <li><a href="https://www.linkedin.com/in/brandon-grimmett/" target="_blank"><i class="icon-linkedin2"></i></a></li>
+                                <li><a href="https://www.instagram.com/mistergrimmett/" target="_blank"><i class="icon-instagram2"></i></a></li>
+                            </ul>-->
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    @Html.Partial("_LoginPartial")
+</div>
+
+
+<div id="fh5co-blog">
+    <div class="row animate-box">
+        <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+            <h2 style="padding-bottom:100px; font-size:22px;">"Either write something worth reading or do something worth writing."</h2>
+
+            <div class="text-center" id="images">
+
+                <div style="padding-top:40px;">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <p>
+                            @Html.ActionLink("Create New", "Create")
+                        </p>
+                    }
+                </div>
+
+
+
+
+                <div class="row">
+                    @foreach (var item in Model)
+            {
+                        <div class="col-md-4">
+                            <p style="font-weight:bold; font-size:24px; color: #ff9000; font-family: Kaushan Script, cursive;">@item.Title</p>
+                            <p><a href="@Url.Action("Details",  new { slug = item.Slug })"><img src="@item.MediaURL" class="img-responsive" /></a></p>
+                            @*<p>@Html.ActionLink(linkText: "Details", actionName: "Details", controllerName: "Posts", routeValues: new { slug = item.Slug }, htmlAttributes: null)"><img src="@item.MediaURL" class="img-responsive" /></p>*@
+                            @*<p>@Html.Raw(item.Body.ToString())</p>*@
+                        </div>
+                    }
+                </div>
+
+                <div style="padding-top:40px;">
+                    @Html.ActionLink("Back to List", "Index")
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<div class="text-center">
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+</div>
+
+
+
+
+
+
+
+
+
